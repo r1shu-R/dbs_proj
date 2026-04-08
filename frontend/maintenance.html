@@ -586,7 +586,11 @@
 <script>
   // Nav / auth bootstrap (maintenance.js handles the rest)
   const _user = JSON.parse(localStorage.getItem("campus_user") || "null");
-  if (!_user) { window.location.href = "index.html"; }
+  const _token = localStorage.getItem("campus_token");
+  if (!_user || !_token) {
+    localStorage.clear();
+    window.location.href = "index.html";
+  }
   const navUserEl = document.getElementById("nav-user");
   if (navUserEl) navUserEl.textContent = _user?.name || _user?.email || "User";
   const logoutBtn = document.getElementById("btn-logout");

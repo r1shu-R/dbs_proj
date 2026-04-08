@@ -476,6 +476,17 @@
   const API = window.SMART_CAMPUS_API;
   if (localStorage.getItem("campus_token")) window.location.href = "dashboard.html";
 
+  function persistSession(data, fallbackEmail = "") {
+    const user = data.user || {};
+    localStorage.setItem("campus_token", data.access_token);
+    localStorage.setItem("campus_user", JSON.stringify({
+      user_id: user.user_id,
+      role_id: user.role_id,
+      email: user.email || fallbackEmail,
+      name: user.name || (fallbackEmail ? fallbackEmail.split("@")[0] : "User")
+    }));
+  }
+
   function switchTab(tab) {
     const isLogin = tab === "login";
     document.getElementById("tab-login").classList.toggle("active", isLogin);
@@ -500,14 +511,7 @@
       const res  = await fetch(`${API}/auth/login`, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({email, password}) });
       const data = await res.json();
       if (!res.ok) { showAlert("login-error", data.detail || "Login failed."); return; }
-      const user = data.user || {};
-      localStorage.setItem("campus_token", data.access_token);
-      localStorage.setItem("campus_user", JSON.stringify({
-        user_id: user.user_id,
-        role_id: user.role_id,
-        email: user.email || email,
-        name: user.name || email.split("@")[0]
-      }));
+      persistSession(data, email);
       window.location.href = "dashboard.html";
     } catch(e) {
       showAlert("login-error", "Cannot reach server. Check that the app is running.");
@@ -528,6 +532,10 @@
       const res  = await fetch(`${API}/auth/register`, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({name, email, password, role_id}) });
       const data = await res.json();
       if (!res.ok) { showAlert("reg-error", data.detail || "Registration failed."); return; }
+      persistSession(data, email);
+      showAlert("reg-success", "Account created! Redirecting...");
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 900);
+      return;
       showAlert("reg-success", "Account created! Redirecting to login…");
       setTimeout(() => { switchTab("login"); document.getElementById("login-email").value = email; }, 1500);
     } catch(e) {

@@ -634,7 +634,11 @@
 <script>
   const API  = window.SMART_CAMPUS_API;
   const user = JSON.parse(localStorage.getItem("campus_user") || "null");
-  if (!user) window.location.href = "index.html";
+  const token = localStorage.getItem("campus_token");
+  if (!user || !token) {
+    localStorage.clear();
+    window.location.href = "index.html";
+  }
 
   document.getElementById("nav-user").textContent     = user?.name || user?.email || "";
   document.getElementById("banner-name").textContent  = user?.name || "there";
