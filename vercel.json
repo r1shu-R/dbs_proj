@@ -1,18 +1,33 @@
 {
   "functions": {
     "api/index.py": {
-      "runtime": "python3.12",
-      "includeFiles": "{frontend/**,js/**,css/**,backend/**}"
+      "runtime": "python3.12"
     }
   },
   "routes": [
     {
-      "src": "/(js|css)/(.*)",
-      "dest": "/$1/$2"
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
     },
     {
-      "src": "/(.*)",
+      "src": "/health",
       "dest": "/api/index.py"
+    },
+    {
+      "src": "/dashboard.html",
+      "dest": "/frontend/dashboard.html"
+    },
+    {
+      "src": "/booking.html",
+      "dest": "/frontend/booking.html"
+    },
+    {
+      "src": "/maintenance.html",
+      "dest": "/frontend/maintenance.html"
+    },
+    {
+      "src": "/",
+      "dest": "/frontend/index.html"
     }
   ]
 }
