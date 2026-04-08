@@ -1,7 +1,13 @@
 {
   "functions": {
     "api/index.py": {
-      "runtime": "python3.12"
+      "runtime": "python3.12",
+      "includeFiles": [
+        "frontend/**",
+        "js/**",
+        "css/**",
+        "backend/**"
+      ]
     }
   },
   "routes": [
